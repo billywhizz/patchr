@@ -1,0 +1,7 @@
+.vscode
+*.node
+patchr
+dist
+build
+node_modules
+patchr.c
