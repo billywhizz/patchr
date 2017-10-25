@@ -31,8 +31,8 @@ inline uint32_t readnumber(int fd, uint8_t* b, uint8_t bytes) {
 	return 0;
 }
 
-int patch(char* source, char* patch, char* out) {
-  mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+int patch(const char* source, const char* patch, const char* out) {
+	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 	int r = 0;
 	int sourcefd = open(source, O_RDONLY, mode);
 	int patchfd = open(patch, O_RDONLY, mode);
@@ -41,7 +41,9 @@ int patch(char* source, char* patch, char* out) {
 	uint8_t* buffer = (uint8_t*)calloc(maxblocksize, 1);
 	uint32_t magic = readnumber(patchfd, buffer, 4);
 	if (magic != MAGIC) {
-		fprintf(stderr, "bad magic number: %u\n", magic);
+		r = close(sourcefd);
+		r = close(patchfd);
+		r = close(outfd);
 		return 1;
 	}
 	while(1) {
@@ -50,9 +52,15 @@ int patch(char* source, char* patch, char* out) {
 			break;
 		} else if (command >= 0x41 && command <= 0x44) {
 			uint32_t length = readnumber(patchfd, buffer, 1 << (command - 0x41));
+			if(length > maxblocksize) {
+				buffer = (uint8_t*)realloc(buffer, length);
+				maxblocksize = length;
+			}
 			r = read(patchfd, buffer, length);
 			if (r == -1) {
-				fprintf(stderr, "bad read from patch file: %u\n", errno);
+				r = close(sourcefd);
+				r = close(patchfd);
+				r = close(outfd);
 				return 3;
 			}
 			r = write(outfd, buffer, length);
@@ -61,20 +69,33 @@ int patch(char* source, char* patch, char* out) {
 			uint32_t offset = readnumber(patchfd, buffer, 1 << (command / 4));
 			uint32_t length = readnumber(patchfd, buffer, 1 << (command % 4));
       lseek(sourcefd, offset, SEEK_SET);
+			if(length > maxblocksize) {
+				buffer = (uint8_t*)realloc(buffer, length);
+				maxblocksize = length;
+			}
 			r = read(sourcefd, buffer, length);
 			if (r == -1) {
-				fprintf(stderr, "bad read from source file: %u\n", errno);
+				r = close(sourcefd);
+				r = close(patchfd);
+				r = close(outfd);
 				return 4;
 			}
 			r = write(outfd, buffer, length);
 			if (r == -1) {
-				fprintf(stderr, "bad write to output file: %u\n", errno);
+				r = close(sourcefd);
+				r = close(patchfd);
+				r = close(outfd);
 				return 5;
 			}
 		} else {
-			fprintf(stderr, "invalid command: %u\n", command);
+			r = close(sourcefd);
+			r = close(patchfd);
+			r = close(outfd);
 			return 2;
 		}
 	}
+	r = close(sourcefd);
+	r = close(patchfd);
+	r = close(outfd);
 	return 0;
 } 

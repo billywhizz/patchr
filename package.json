@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "node-gyp rebuild"
+    "test": "./node_modules/mocha/bin/mocha --reporter spec -t 10000 --bail --check-leaks test/*.test.js",
+    "build": "node-gyp rebuild"
   },
   "author": "Andrew Johnston",
   "license": "ISC",
   "gypfile": true,
+  "dependencies": {
+    "nan": "2.7.0"
+  },
   "devDependencies": {
-    "nan": "^2.7.0"
+    "mocha": "4.0.1",
+    "should": "^13.1.2"
   }
 }

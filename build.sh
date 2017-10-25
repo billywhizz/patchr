@@ -7,6 +7,7 @@ export CXXFLAGS="-O3 -Wall -Wextra"
 node-gyp --openssl_fips=1 --target=$VERSION build
 cp build/Release/patchr.node ./$PLATFORM.$ARCH.node
 cp $PLATFORM.$ARCH.node dist/
+rm $PLATFORM.$ARCH.node
 cp lib/patchr.js dist/lib
 cp index.js dist/
 cp package.json dist/
