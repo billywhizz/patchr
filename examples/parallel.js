@@ -6,7 +6,7 @@ const fixtures = path.join(__dirname, '../fixtures')
 async function spawn() {
 	const start = Date.now()
 	console.log('running')
-	await patch(path.join(fixtures, 'newyork.pdf'), path.join(fixtures, 'newyork.bin'), '/dev/null')
+	await patch(path.join(fixtures, 'newyork.pdf'), path.join(fixtures, 'newyork.bin'), path.join(fixtures, 'newyork-new.pdf'))
 	console.log(Date.now() - start)
 }
 
