@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec --recursive --bail --check-leaks test/",
-    "cover": "nyc --reporter lcov ./node_modules/mocha/bin/_mocha --reporter spec --recursive --bail --check-leaks test/",
-    "clean": "rm -fr .nyc_output && rm -fr coverage",
-    "build": "node-gyp rebuild"
+    "test": "./node_modules/mocha/bin/mocha --reporter spec --recursive --bail test/",
+    "cover": "nyc --reporter lcov ./node_modules/mocha/bin/_mocha --reporter spec --recursive --bail test/",
+    "clean": "rm -fr .nyc_output && rm -fr coverage && rm -fr build && rm -fr dist",
+    "report": "nyc report",
+    "build": "node-gyp rebuild",
+    "dist": "sh dist.sh",
+    "all": "npm run clean && npm run build && npm run dist && npm run cover && npm run report"
   },
   "author": "Andrew Johnston",
   "license": "ISC",

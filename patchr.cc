@@ -88,7 +88,9 @@ int patch(const char* source, const char* patch, const char* out) {
 			uint32_t length = readnumber(patchfd, buffer, 1 << (command % 4));
       lseek(sourcefd, offset, SEEK_SET);
 			if(length > maxblocksize) {
-				buffer = (uint8_t*)realloc(buffer, length);
+				uint8_t* b = (uint8_t*)realloc(buffer, length);
+				if (!b) free(buffer);
+				return 999;
 				maxblocksize = length;
 			}
 			r = read(sourcefd, buffer, length);
