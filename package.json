@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec -t 10000 --bail --check-leaks test/*.test.js",
+    "test": "./node_modules/mocha/bin/mocha --reporter spec --recursive --bail --check-leaks test/",
+    "cover": "nyc --reporter lcov ./node_modules/mocha/bin/_mocha --reporter spec --recursive --bail --check-leaks test/",
+    "clean": "rm -fr .nyc_output && rm -fr coverage",
     "build": "node-gyp rebuild"
   },
   "author": "Andrew Johnston",
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "mocha": "4.0.1",
-    "should": "^13.1.2"
+    "nyc": "11.2.1",
+    "should": "13.1.2"
   }
 }
