@@ -6,3 +6,5 @@ build
 node_modules
 patchr.c
 fixtures/newyork-new.pdf
+coverage
+.nyc_output
