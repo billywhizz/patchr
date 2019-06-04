@@ -202,7 +202,7 @@ describe('patcher bindings', () => {
 		}
 	});
 
-	xit('should fail with a bad magic number', async () => {
+	it('should fail with a bad magic number', async () => {
 		try {
 			basePath = path.join(fixtures, 'newyork.pdf');
 			patchPath = path.join(fixtures, 'badmagic.bin');
